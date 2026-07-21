@@ -5,20 +5,25 @@ configDotenv()
 const app = express();
 const puerto = process.env.PORT || 3000;
 
-app.get("/",(rep, res)=>{
-     res.send("Hola ficha 3407180")
+app.get("/saludo/:ficha", (req, res) => {
+    const ficha = req.params.ficha;
+     res.send(`<h1>Jhon Alex Beltran</h1>
+        <p>Soy de la ficha: ${ficha}</p>`);
 });
+
+
 
 app.get("/misaludo", (rep, res)=>{
      res.send(`<h1>Hola, soy Jhon Beltran</h1>
         <p>Soy aprendiz SENA</p>`)
 });
 
-app.get("/clientes/:id", (req, res) => {
-    const id = req.params.id;
+app.get("/clientes/:id", (rep, res) => {
+     const id = req.params.id;
      res.send(`<h1>Clientes</h1>
         <p>Soy el cliente con ID ${id}</p>`);
-})
+});
+
 
 
 app.listen(puerto, () => {
