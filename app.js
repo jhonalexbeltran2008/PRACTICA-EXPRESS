@@ -14,7 +14,14 @@ app.get("/misaludo", (rep, res)=>{
         <p>Soy aprendiz SENA</p>`)
 });
 
+app.get("/clientes/:id", (req, res) => {
+    const id = req.params.id;
+     res.send(`<h1>Clientes</h1>
+        <p>Soy el cliente con ID ${id}</p>`);
+})
+
 
 app.listen(puerto, () => {
-    console.log(`servidor funcional!! en el puerto ${puerto}`);
+    console.log(`SERVIDOR http://localhoost:${puerto}
+        http:127.0.0.1:${puerto}`)
 });
