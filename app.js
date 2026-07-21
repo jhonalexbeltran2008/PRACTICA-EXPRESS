@@ -10,5 +10,5 @@ res.send("Hola ficha 3407180")
 });
 
 app.listen(puerto, () => {
-    console.log('servidor funcional!! en el puerto ${puerto}');
+    console.log(`servidor funcional!! en el puerto ${puerto}`);
 });
