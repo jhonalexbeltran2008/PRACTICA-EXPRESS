@@ -29,22 +29,37 @@ app.listen(puerto, () => {
 
 // 28/07
 
-app.get("/productos/:categoria", (req, res) => {
-     const categoria = req.params.categoria;
-      res.send(`<h1>Categoria</h1>
-        <p> Producto de la categoria ${categoria} </p>`)
+let ListaProductos = [
+        {id: 1, nombre: "Leche", cantidad: 4, categoria: "Lacteos"},
+        {id: 2, nombre: "Queso", cantidad: 8, categoria: "Lacteos"},
+        {id: 3, nombre: "Arroz", cantidad: 7, categoria: "Granos"}
+];
+
+let ListaCategorias = [
+        {id: 1, nombre: "Lacteos", descripcion: "Productos derivados de la leche"},
+        {id: 2, nombre: "Granos", descripcion: "Arroz, Frijol, Lentejas"}      
+];
+
+let ListaLibros = [
+        {isbn: "918123", titulo:"Paraiso Travel", autor:"William Estupiñan"},
+        {isbn: "918124", titulo:"Colombia", autor:"Westcol"}
+];
+
+app.get("/productos/:categoria=id", (req, res) => {
+     const categoria = req.query.categoria;
+     productos.forEach(ListaCategorias => {});
+      res.send(`<h1>Producto</h1>
+        <p> Productos de la categoria ${categoria} </p>`)
 });
 
-
 app.get("/productos/:categoria/:id", (req, res) => {
-     const categoria = req.params.categoria;
-     const id = req.params.id;
+     const categoria = req.query.categoria;
      res.send(`<h1>Categoria con ID</h1>        
         <p>Producto de la categoria ${categoria} con ID ${id} </p>`)
 });
- 
+
 app.get("/Libros/:isbn", (req, res) => {
-     const isbn = req.params.isbn;
+     const isbn = req.query.isbn;
      res.send(`<h1>Libros</h1>
         <p>Libro con isbn ${isbn}</p>`)
 });
