@@ -1,65 +1,54 @@
-import express from "express";
-import{configDotenv} from "dotenv"
-configDotenv()
-
+const { error } = require("console");
+const express = require("express")
 const app = express();
-const puerto = process.env.PORT || 3000;
 
-app.get("/saludo/:ficha", (req, res) => {
-    const ficha = req.params.ficha;
-     res.send(`<h1>Jhon Alex Beltran</h1>
-        <p>Soy de la ficha: ${ficha}</p>`);
+//Configuracion de body-parse
+app.use(express.json())
+const sistemaArchivos = require("fs")
+const ruta = require("path")
+const PORT = process.env.PORT || 3000;
+
+// Ruta archivo .json
+
+const rutaArchivoJson = ruta.join(__dirname, "aprendices.json")
+app.get("/", (req, res) => {
+     res.send(`<h1>Api Aprendices</h1>`);
 });
 
-app.get("/misaludo", (req, res)=>{
-     res.send(`<h1>Hola, soy Jhon Beltran</h1>
-        <p>Soy aprendiz SENA</p>`)
+// List crear endpoint 
+
+app.get("/api/aprendices", (req, res) => {
+    sistemaArchivos.readFile(rutaArchivoJson, "utf-8", (error, datos) =>
+    {
+       if(error){
+          return res.status(500).json({Error: "Error conexion db."})
+       }
+       const listaAprendices = JSON.parse(datos)
+       res.json(listaAprendices)
+    })
+})
+
+//Endpoint para adicionar 
+
+app.post("/api/aprendices", (req,res)=>{
+  const datosAprendiz = req.body
+  sistemaArchivos.readFile(rutaArchivoJson, "utf-8", (error, datos)=>{
+    if (error){
+      return res.json({Error: "Error de conexion"})
+    }
+    
+    const listaAprendiz = JSON.parse(datos)
+    listaAprendiz.push(datosAprendiz)
+    sistemaArchivos.writeFile(rutaArchivoJson, JSON.stringify(listaAprendiz,null,2), (error)=>{
+      if (error){
+        res.status(500).json({Error: "No se puede registrar."})
+      }
+      res.status(201).json(datosAprendiz)
+    })
+  })
+})
+
+app.listen(PORT, () => { 
+    console.log(`Servidor: http://localhost:${PORT}`);
 });
 
-app.get("/clientes/:id", (req, res) => {
-     const id = req.params.id;
-     res.send(`<h1>Clientes</h1>
-        <p>Soy el cliente con ID ${id}</p>`);
-});
-
-app.listen(puerto, () => {
-    console.log(`SERVIDOR http://localhoost:${puerto}
-        http:127.0.0.1:${puerto}`)
-});
-
-// 28/07
-
-let ListaProductos = [
-        {id: 1, nombre: "Leche", cantidad: 4, categoria: "Lacteos"},
-        {id: 2, nombre: "Queso", cantidad: 8, categoria: "Lacteos"},
-        {id: 3, nombre: "Arroz", cantidad: 7, categoria: "Granos"}
-];
-
-let ListaCategorias = [
-        {id: 1, nombre: "Lacteos", descripcion: "Productos derivados de la leche"},
-        {id: 2, nombre: "Granos", descripcion: "Arroz, Frijol, Lentejas"}      
-];
-
-let ListaLibros = [
-        {isbn: "918123", titulo:"Paraiso Travel", autor:"William Estupiñan"},
-        {isbn: "918124", titulo:"Colombia", autor:"Westcol"}
-];
-
-app.get("/productos/:categoria=id", (req, res) => {
-     const categoria = req.query.categoria;
-     productos.forEach(ListaCategorias => {});
-      res.send(`<h1>Producto</h1>
-        <p> Productos de la categoria ${categoria} </p>`)
-});
-
-app.get("/productos/:categoria/:id", (req, res) => {
-     const categoria = req.query.categoria;
-     res.send(`<h1>Categoria con ID</h1>        
-        <p>Producto de la categoria ${categoria} con ID ${id} </p>`)
-});
-
-app.get("/Libros/:isbn", (req, res) => {
-     const isbn = req.query.isbn;
-     res.send(`<h1>Libros</h1>
-        <p>Libro con isbn ${isbn}</p>`)
-});

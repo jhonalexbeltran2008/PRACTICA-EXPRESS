@@ -2,7 +2,6 @@
   "name": "intro-express",
   "version": "1.0.0",
   "description": "",
-  "type": "module",
   "main": "index.js",
   "scripts": {
     "dev": "node --watch app.js",
@@ -11,7 +10,7 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-
+  "type": "commonjs",
   "dependencies": {
     "dotenv": "^17.4.2",
     "express": "^5.2.1"
