@@ -48,6 +48,55 @@ app.post("/api/aprendices", (req,res)=>{
   })
 })
 
+// Endpoint para editar
+
+app.put("/api/aprendices/:di", (req,res)=>{
+  const diAprendiz = parseInt(req.params.di)
+  const datosAprendiz = req.body
+  sistemaArchivos.readFile(rutaArchivoJson,  "utf-8", (error, datos)=>{
+  if (error){
+    return  res.status(500).json({Error: "Error de conexion db."})
+  }
+  let listaAprendices = JSON.parse(datos)
+
+// Actualizar datos
+
+listaAprendices = listaAprendices.map(aprendiz => {
+  return aprendiz.di === diAprendiz ? {...aprendiz, ...datosAprendiz} : aprendiz
+})
+
+// Escritura de archivo
+sistemaArchivos.writeFile(rutaArchivoJson, JSON.stringify(listaAprendices,null,2), (error) =>{
+  if (error){
+    return res.json({Error: "No se puede editar."})
+  }
+     res.status(200).json(datosAprendiz)
+
+    })
+  })
+})
+
+// Endpoint para eliminar 
+
+app.delete("/api/aprendices/:di", (req, res) => {
+  const di = req.params.di
+  sistemaArchivos.readFile(rutaArchivoJson, "utf-8", (error, datos)=>{
+    if (error){
+      return res.json({Error: "Error de conexion"})
+    }
+
+    const listaAprendiz = JSON.parse(datos)
+    const Lista = listaAprendiz.filter(aprendiz => aprendiz.di != di)
+
+    sistemaArchivos.writeFile(rutaArchivoJson, JSON.stringify(Lista,null,2), (error)=>{
+      if (error){
+        res.status(500).json({Error: "No se puede eliminar."})
+      }
+      res.status(200).json({Mensaje: "Aprendiz eliminado."})
+    })
+  })
+})
+
 app.listen(PORT, () => { 
     console.log(`Servidor: http://localhost:${PORT}`);
 });
